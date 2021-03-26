@@ -3,3 +3,4 @@ flask_swagger_ui
 flask_swagger
 flask_restful
 Flask
+requests
