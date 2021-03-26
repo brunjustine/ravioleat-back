@@ -37,10 +37,5 @@ RESTAURANT = {
            "SeoName": str
        }
     ],
-    "OpeningTimes":
-        {
-            "Open": str,
-            "Close": str
-        },
     "PriceCategory": int,
 }

@@ -30,7 +30,7 @@ class RestaurantsByLatLong(Resource):
             return {"status": 200, "message": "OK", "data": restaurants}
         except Exception as e:
             print(e)
-            abort(400, status=400, message="Bad Request", data="")
+            abort(400, status=400, message="Bad Request", data=e.__str__())
 
 
 def format_json(restaurants):
@@ -87,12 +87,6 @@ def format_json(restaurants):
                                          }
                                          for cuisine_type in restaurant['CuisineTypes']
                                      ])
-
-        restaurant_model.__setitem__('OpeningTimes',
-                                     {
-                                         'Open': '',
-                                         'Close': ''
-                                     })
         restaurant_model.__setitem__('PriceCategory', None)
         restaurant_list.append(restaurant_model)
     return restaurant_list
