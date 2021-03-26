@@ -2,7 +2,6 @@ from flask_restful import Resource, reqparse, abort
 import requests
 from app.resources.just_eat.utils import *
 from app.services.restaurantService import RESTAURANT
-from flask import jsonify
 
 
 class RestaurantsByLatLong(Resource):
@@ -27,7 +26,6 @@ class RestaurantsByLatLong(Resource):
                                        headers={'Accept-Tenant': country_code})
 
             restaurants = format_json(restaurants.json())
-            #print(restaurants)
 
             return {"status": 200, "message": "OK", "data": restaurants}
         except Exception as e:
@@ -37,9 +35,9 @@ class RestaurantsByLatLong(Resource):
 
 def format_json(restaurants):
     restaurant_list = []
+
     for restaurant in restaurants["Restaurants"]:
-        #print([x for x in restaurant['CuisineTypes']])
-        restaurant_model = RESTAURANT
+        restaurant_model = RESTAURANT.copy()
 
         restaurant_model.__setitem__('Id', restaurant['Id'])
         restaurant_model.__setitem__('Name', restaurant['Name'])
@@ -66,7 +64,8 @@ def format_json(restaurants):
                                              'RangeLower': restaurant['DeliveryEtaMinutes']['RangeLower'],
                                              'RangeUpper': restaurant['DeliveryEtaMinutes']['RangeUpper']
                                          })
-        restaurant_model.__setitem__('DeliveryEtaMinutes', None)
+        else:
+            restaurant_model.__setitem__('DeliveryEtaMinutes', None)
         restaurant_model.__setitem__('IsOpenNow', restaurant['IsOpenNow'])
         restaurant_model.__setitem__('DeliveryCost', restaurant['DeliveryCost'])
         restaurant_model.__setitem__('Offers',

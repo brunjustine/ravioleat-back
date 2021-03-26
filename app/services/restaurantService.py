@@ -10,7 +10,7 @@ RESTAURANT = {
        "Longitude": float
     },
     "Rating": {
-       "Count": int,
+       "Count": str,
        "StarRating": float
     },
     "Description": str,
