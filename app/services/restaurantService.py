@@ -1,4 +1,5 @@
 RESTAURANT = {
+    "Api": str,
     "Id": int,
     "Name": str,
     "UniqueName": str,
@@ -24,8 +25,6 @@ RESTAURANT = {
     "DeliveryCost": float,
     "Offers": [
         {
-            "Type": str,
-            "Amount": float,
             "Description": str,
             "OfferId": int
         }
