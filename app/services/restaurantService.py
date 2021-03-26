@@ -1,6 +1,6 @@
 RESTAURANT = {
     "Api": str,
-    "Id": int,
+    "Id": str,
     "Name": str,
     "UniqueName": str,
     "Address": {
