@@ -124,10 +124,31 @@ class RestaurantUberResource(Resource):
             abort(400)
         categories = call_category(params)
         #categories = ['pizza']
-        RESTAURANTS = get_all_restaurants(params, categories)
+        del RESTAURANTS[:]
+        RESTAURANTS.append(get_all_restaurants(params, categories))
         return RESTAURANTS
-
     
+class RestaurantUberByIdResource(Resource):
+    def get(self, restaurant_id: str) -> Dict[str,Any]:
+        """
+        Get the restaurant by his uid
+        ---
+        tags:
+            - Flask API
+        parameters:
+            - in: path
+              name: restaurant_id
+              description: The id of the restaurant 
+              required: true
+              type: string
+        responses:
+            200:
+                description: JSON representing the restaurant
+            404:
+                description: The restaurant does not exist
+        """
+        abort_if_restaurant_empty()
+        return get_restaurant_by_id(restaurant_id)   
 
 def call_category(params: Dict[str, Any]):
     url = "http://0.0.0.0:5000/restaurants/uber/categories"
@@ -172,3 +193,14 @@ def call_search(params : Dict[str, Any], category:str):
     }
     headers = {'Content-Type': 'application/json'}
     return requests.post(url, json=data, headers=headers).json()
+
+def abort_if_restaurant_empty():
+    if not RESTAURANTS:
+        abort(404,message ='Error : No restaurants found')
+
+
+def get_restaurant_by_id(restaurant_id : str):
+    restaurant_details = RESTAURANTS[0]['feed']['feedItems']
+    map_details = RESTAURANTS[0]["feed"]["storesMap"]
+    return list(filter(lambda e: e['uuid']==restaurant_id, restaurant_details))
+    #return map_details
