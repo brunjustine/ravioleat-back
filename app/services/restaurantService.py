@@ -31,7 +31,7 @@ RESTAURANT = {
     ],
     "CuisineTypes": [
        {
-           "Id": int,
+           "Id": str,
            "Name": str,
            "SeoName": str
        }
