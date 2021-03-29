@@ -22,27 +22,6 @@ def get_deliveroo_restaurants(lat, lng):
         print(e)
         abort(400, status=400, message="Bad Request", data=e.__str__())
 
-# class restaurantDeliverooResource(Resource):
-#
-#     headers = {"X-Roo-Country":"uk", "Accept-Language":"en-en", "User":"Deliveroo-OrderApp/3.73.0","Content-Type":"application/json"}
-#
-#     def post(self):
-#         try :
-#             body_parser = reqparse.RequestParser(bundle_errors=True)
-#             body_parser.add_argument('lat', type=float, required=True, help="Missing the latitude")
-#             body_parser.add_argument('lng', type=float, required=True, help="Missing the longitutde")
-#             args = body_parser.parse_args(strict=True)
-#             lat = args['lat']
-#             lng = args['lng']
-#             params = {'lat':args['lat'], 'lng':args['lng']}
-#             url = "https://api.fr.deliveroo.com/orderapp/v2/restaurants"
-#             response_dict = requests.get(url,params=params,headers=self.headers).json()
-#             res = initResto(response_dict)
-#             return({"status":200,"message":"OK","data":res})
-#         except Exception as e:
-#                     print(e)
-#                     abort(400)
-
 
 
 
