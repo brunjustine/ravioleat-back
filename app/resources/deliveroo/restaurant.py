@@ -6,7 +6,7 @@ from typing import Dict, List, Any
 import requests
 
 from app.services.restaurantWithMenuService import RESTAURANT_WITH_MENU
-from app.resources.deliveroo.restaurants import get_deliveroo_restaurants
+from app.resources.deliveroo.restaurants import get_deliveroo_restaurants, search
 
 
 
@@ -22,7 +22,7 @@ class restaurantByIDDeliverooResource(Resource):
             return({"status":200,"message":"OK","data":res})
         except Exception as e:
                     print(e)
-                    abort(400)
+                    abort(400, status=400, message="Bad Request", data=e.__str__())
         
 def initRestoById(lat,lng,restaurant_by_id):
     liste_restaurants = get_deliveroo_restaurants(lat,lng)
