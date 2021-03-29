@@ -77,7 +77,7 @@ def format_json(restaurants):
     for restaurant in restaurants["Restaurants"]:
         restaurant_model = RESTAURANT.copy()
 
-        restaurant_model.__setitem__('Api', 'just-eat')
+        restaurant_model.__setitem__('Api', 'just_eat')
         restaurant_model.__setitem__('Id', restaurant['Id'])
         restaurant_model.__setitem__('Name', restaurant['Name'])
         restaurant_model.__setitem__('UniqueName', restaurant['UniqueName'])
