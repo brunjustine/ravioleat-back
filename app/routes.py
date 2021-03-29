@@ -1,6 +1,7 @@
 from app import api
 
 from app.resources.hello import HelloWorld
+
 from app.resources.deliveroo.restaurant import restaurantByIDDeliverooResource
 from app.resources.restaurants import RestaurantsByLatLong
 from app.resources.just_eat.restaurant import RestaurantByID
