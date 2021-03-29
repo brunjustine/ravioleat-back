@@ -127,13 +127,12 @@ class RestaurantUberResource(Resource):
             params['user_query'] = args['userQuery'] if args['userQuery'] != "" else get_formatted_categories(params)
         except:
             abort(400)
-        #categories = ['pizza']
         del UBER_RESTAURANTS[:]
         UBER_RESTAURANTS.append(call_search(params))
         liste_restaurants = initResto()
         return liste_restaurants
-        #return UBER_RESTAURANTS
 
+#TO DELETE
 class RestaurantUberByIdResource(Resource):
     def get(self, restaurant_id: str) -> Dict[str,Any]:
         """
@@ -196,11 +195,11 @@ def call_search(params : Dict[str, Any]):
     headers = {'Content-Type': 'application/json'}
     return requests.post(url, json=data, headers=headers).json()
 
+#TO DELETE
 def abort_if_restaurant_empty():
     if not UBER_RESTAURANTS:
         abort(404,message ='Error : No restaurants found')
-
-
+#TO DELETE
 def get_restaurant_by_id(restaurant_id : str):
     restaurant_details = UBER_RESTAURANTS[0]['feed']['feedItems']
     map_details = UBER_RESTAURANTS[0]["feed"]["storesMap"]
