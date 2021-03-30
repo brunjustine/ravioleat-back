@@ -88,7 +88,6 @@ def search(lat,lng,mot) :
         nomResto = prepString(resto["Name"])
         if fuzz.token_set_ratio(mot,nomResto)>80 or fuzz.partial_ratio(mot,nomResto)>80:
             restaurants_filtres.append(resto)
-    print(restaurants_filtres)
     return restaurants_filtres
 
 

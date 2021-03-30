@@ -54,7 +54,6 @@ def get_restaurants_ids(restaurants):
 
 def get_restaurants_by_ids(ids, all_restaurants):
     restaurants = []
-    print(ids)
     for restaurant in all_restaurants:
         if restaurant['Id'] in ids:
             restaurants.append(restaurant)

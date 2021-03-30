@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse, abort
 from app.resources.just_eat.restaurants import get_just_eat_restaurants, get_just_eat_restaurant_search
-from app.resources.deliveroo.restaurants import get_deliveroo_restaurants
+from app.resources.deliveroo.restaurants import get_deliveroo_restaurants, search
 from app.resources.uber_eat.restaurants import get_uber_eat_restaurants
 
 
@@ -41,6 +41,7 @@ class RestaurantsByLatLongBySearch(Resource):
         body_parser.add_argument('lat', type=str, required=True, help="Missing the latitude")
         body_parser.add_argument('lon', type=str, required=True, help="Missing the longitude")
         body_parser.add_argument('searchTerm', type=str, required=True, help="Missing the searchTerm")
+        body_parser.add_argument('formattedAddress', type=str, required=True, help="Missing the address ")
         # Accepted only if these two parameters are strictly declared in body else raise exception
         args = body_parser.parse_args(strict=True)
 
@@ -48,10 +49,13 @@ class RestaurantsByLatLongBySearch(Resource):
             lat = args['lat']
             lon = args['lon']
             search_term = args['searchTerm']
+            formatted_address = args['formattedAddress']
 
             restaurants = []
 
             restaurants.extend(get_just_eat_restaurant_search(lat, lon, search_term))
+            restaurants.extend(search(lat, lon, search_term))
+            restaurants.extend(get_uber_eat_restaurants(lat, lon, formatted_address, search_term))
 
             return {"status": 200, "message": "OK", "data": restaurants}
 

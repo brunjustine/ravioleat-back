@@ -10,19 +10,16 @@ from app.resources.deliveroo.restaurants import get_deliveroo_restaurants, searc
 
 
 
-class restaurantByIDDeliverooResource(Resource):
-    
+def get_deliveroo_restaurant_by_id(lat, lng, id_restaurant):
     headers = {"X-Roo-Country":"fr", "Accept-Language":"fr-fr", "User":"Deliveroo-OrderApp/3.73.0","Content-Type":"application/json"}
-    
-    def get(self,id_restaurant):
-        try :
-            url = "https://api.fr.deliveroo.com/orderapp/v1/restaurants/"+str(id_restaurant)
-            response_dict = requests.get(url,headers=self.headers).json()
-            res = initRestoById(48.856614,2.3522219,response_dict)
-            return({"status":200,"message":"OK","data":res})
-        except Exception as e:
-                    print(e)
-                    abort(400, status=400, message="Bad Request", data=e.__str__())
+    try :
+        url = "https://api.fr.deliveroo.com/orderapp/v1/restaurants/"+str(id_restaurant)
+        response_dict = requests.get(url,headers=headers).json()
+        res = initRestoById(lat,lng,response_dict)
+        return({"status":200,"message":"OK","data":res})
+    except Exception as e:
+                print(e)
+                abort(400, status=400, message="Bad Request", data=e.__str__())
         
 def initRestoById(lat,lng,restaurant_by_id):
     liste_restaurants = get_deliveroo_restaurants(lat,lng)
