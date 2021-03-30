@@ -20,8 +20,8 @@ def get_just_eat_restaurants(lat, lon):
 
         return restaurants
     except Exception as e:
-        print(e)
-        abort(400, status=400, message="Bad Request", data=e.__str__())
+        print(e.__str__())
+        return {}
 
 
 def get_just_eat_restaurant_search(lat, lon, search_term):
@@ -31,7 +31,6 @@ def get_just_eat_restaurant_search(lat, lon, search_term):
         tenant = get_tenant_from_country_code(country_code)
 
         url = 'https://{0}.api.just-eat.io/search/restaurants/{1}'.format(tenant, country_code)
-
         restaurants = requests.get(url,
                                    params={'searchTerm': search_term, 'latlong': lat + ',' + lon},
                                    headers={'Accept-Tenant': country_code})
@@ -41,8 +40,8 @@ def get_just_eat_restaurant_search(lat, lon, search_term):
 
         return restaurants
     except Exception as e:
-        print(e)
-        abort(400, status=400, message="Bad Request", data=e.__str__())
+        print(e.__str__())
+        return {}
 
 
 def get_restaurants_ids(restaurants):

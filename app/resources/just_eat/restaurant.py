@@ -20,9 +20,8 @@ def get_just_eat_restaurant_by_id(lat, lon, restaurant_id):
         restaurant_items = add_items_prices(country_code, tenant, restaurant_id, restaurant_items)
 
         restaurant = get_restaurant_by_id(get_just_eat_restaurants(lat, lon), restaurant_id)
-
+        print(restaurant)
         restaurant = format_json(restaurant, restaurant_items)
-
         return restaurant
 
     except Exception as e:
@@ -31,7 +30,7 @@ def get_just_eat_restaurant_by_id(lat, lon, restaurant_id):
 
 def get_restaurant_by_id(restaurants, restaurant_id):
     for restaurant in restaurants:
-        if restaurant['Id'] == restaurant_id:
+        if int(restaurant['Id']) == int(restaurant_id):
             return restaurant
 
 
@@ -50,6 +49,7 @@ def add_items_prices(country_code, tenant, restaurant_id, restaurant_items):
 
         url = "https://{0}.api.just-eat.io/restaurants/{1}/{2}/catalogue/items/{3}/variations" \
             .format(country_code, tenant, restaurant_id, restaurant_item_id)
+
         item = requests.get(url, params={'limit': 1000}).json()
         item_price = get_item_price(item, restaurant_item_id)
         restaurants_item['price'] = item_price
