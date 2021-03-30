@@ -13,9 +13,6 @@ class RestaurantsByLatLong(Resource):
         body_parser.add_argument('userQuery', type=str, required=True, help="Missing the user query ")
         args = body_parser.parse_args(strict=True)
 
-        # Accepted only if these two parameters are strictly declared in body else raise exception
-        args = body_parser.parse_args(strict=True)
-
         try:
             lat = args['lat']
             lon = args['lon']
