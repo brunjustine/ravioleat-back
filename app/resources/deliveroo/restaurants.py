@@ -4,6 +4,7 @@ from flask_restful import Resource, reqparse, abort
 from typing import Dict, List, Any
 
 import requests
+from fuzzywuzzy import fuzz
 
 from app.services.restaurantService import RESTAURANT
 
@@ -79,3 +80,20 @@ def listeCategories(resto, toutesLesCategories) :
     return(resCategories)
 
 
+def search(lat,lng,mot) :
+    restaurants = get_deliveroo_restaurants(lat,lng)
+    restaurants_filtres = []
+    mot = prepString(mot)
+    for resto in restaurants : 
+        nomResto = prepString(resto["Name"])
+        if fuzz.token_set_ratio(mot,nomResto)>80 or fuzz.partial_ratio(mot,nomResto)>80:
+            restaurants_filtres.append(resto)
+    print(restaurants_filtres)
+    return restaurants_filtres
+
+
+def prepString(_str):
+    noise_list = [".", ",", "?", "!", ";"]
+    for car in noise_list:
+        _str = _str.replace(car, "")
+    return _str.strip().lower()
