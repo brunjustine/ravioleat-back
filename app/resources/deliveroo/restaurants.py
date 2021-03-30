@@ -4,6 +4,7 @@ from flask_restful import Resource, reqparse, abort
 from typing import Dict, List, Any
 
 import requests
+from fuzzywuzzy import fuzz
 
 from app.services.restaurantService import RESTAURANT
 
@@ -21,29 +22,6 @@ def get_deliveroo_restaurants(lat, lng):
     except Exception as e:
         print(e)
         abort(400, status=400, message="Bad Request", data=e.__str__())
-
-# class restaurantDeliverooResource(Resource):
-#
-#     headers = {"X-Roo-Country":"uk", "Accept-Language":"en-en", "User":"Deliveroo-OrderApp/3.73.0","Content-Type":"application/json"}
-#
-#     def post(self):
-#         try :
-#             body_parser = reqparse.RequestParser(bundle_errors=True)
-#             body_parser.add_argument('lat', type=float, required=True, help="Missing the latitude")
-#             body_parser.add_argument('lng', type=float, required=True, help="Missing the longitutde")
-#             args = body_parser.parse_args(strict=True)
-#             lat = args['lat']
-#             lng = args['lng']
-#             params = {'lat':args['lat'], 'lng':args['lng']}
-#             url = "https://api.fr.deliveroo.com/orderapp/v2/restaurants"
-#             response_dict = requests.get(url,params=params,headers=self.headers).json()
-#             res = initResto(response_dict)
-#             return({"status":200,"message":"OK","data":res})
-#         except Exception as e:
-#                     print(e)
-#                     abort(400)
-
-
 
 
 def initResto(restaurants):
@@ -102,3 +80,20 @@ def listeCategories(resto, toutesLesCategories) :
     return(resCategories)
 
 
+def search(lat,lng,mot) :
+    restaurants = get_deliveroo_restaurants(lat,lng)
+    restaurants_filtres = []
+    mot = prepString(mot)
+    for resto in restaurants : 
+        nomResto = prepString(resto["Name"])
+        if fuzz.token_set_ratio(mot,nomResto)>80 or fuzz.partial_ratio(mot,nomResto)>80:
+            restaurants_filtres.append(resto)
+    print(restaurants_filtres)
+    return restaurants_filtres
+
+
+def prepString(_str):
+    noise_list = [".", ",", "?", "!", ";"]
+    for car in noise_list:
+        _str = _str.replace(car, "")
+    return _str.strip().lower()

@@ -6,3 +6,6 @@ Flask
 requests
 geopy
 jsonmerge
+pathlib
+fuzzywuzzy
+python-Levenshtein
