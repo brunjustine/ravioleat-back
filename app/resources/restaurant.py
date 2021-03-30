@@ -28,7 +28,7 @@ class RestaurantById(Resource):
             elif api == "deliveroo":
                 restaurant = get_deliveroo_restaurant_by_id(lat, lon, restaurant_id)
             # elif api == "uber_eat":
-                # restaurant = get_uber_eat_restaurant_by_id(lat, lon, formatted_address, user_query)
+                # restaurant = get_uber_eat_restaurant_by_id(lat, lon, formatted_address, user_query, restaurant_id)
             else :
                 abort(404, status=404, message="Not found", data="API not found")
             return {"status": 200, "message": "OK", "data": restaurant}
