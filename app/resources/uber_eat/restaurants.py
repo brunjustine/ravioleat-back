@@ -69,7 +69,6 @@ def get_uber_eat_restaurants(latitude, longitude, formatted_address, user_query)
         200:
             description: JSON representing all the elements
     """
-
     try:  
         params = {"latitude":float(latitude), "longitude" :float(longitude) , "formatted_address": formatted_address}  
         params['user_query'] = user_query if user_query != "" else get_formatted_categories(params)
@@ -124,12 +123,19 @@ def initResto():
             #todo check if url == url uber_eat+uuid
             restaurant_model.__setitem__("Url",None)
             restaurant_model.__setitem__("LogoUrl",attributs.get("heroImageUrl",""))
+
             
-            available = resto["payload"]["storePayload"]["stateMapDisplayInfo"]["available"]["subtitle"]["text"].split(" min")
-            restaurant_model.__setitem__("DeliveryEtaMinutes",{
-                "RangeLower": available[0].split("–")[0],
-                "RangeUpper": available[0].split("–")[1]
-            })
+            try : 
+                available = resto["payload"]["storePayload"]["stateMapDisplayInfo"]["available"]["subtitle"]["text"].split(" min")
+                print(available)
+                restaurant_model.__setitem__("DeliveryEtaMinutes",{
+                    "RangeLower": available[0].split("–")[0],
+                    "RangeUpper": available[0].split("–")[1]
+                })
+            except : 
+                restaurant_model.__setitem__("DeliveryEtaMinutes",None)
+                print("None")
+            
             restaurant_model.__setitem__("IsOpenNow",attributs["isOrderable"])
             restaurant_model.__setitem__("DeliveryCost", attributs.get("fareInfo", {}).get('serviceFee'))
             restaurant_model.__setitem__("Offers",None)
