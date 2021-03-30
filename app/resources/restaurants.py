@@ -21,7 +21,7 @@ class RestaurantsByLatLong(Resource):
 
             restaurants = []
 
-            restaurants.extend(get_just_eat_restaurants(lat, lon))
+            #restaurants.extend(get_just_eat_restaurants(lat, lon))
             restaurants.extend(get_deliveroo_restaurants(lat, lon))
             restaurants.extend(get_uber_eat_restaurants(lat, lon, formatted_address, user_query))
 
