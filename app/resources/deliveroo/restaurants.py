@@ -75,11 +75,12 @@ def listeCategories(resto, toutesLesCategories) :
     resCategories = []
     for categorieResto in resto["relationships"]["menu_tags"]["data"]: 
         res = next(categorie for categorie in toutesLesCategories if (categorie["id"]==categorieResto["id"] and categorie["type"]==categorieResto["type"]))
-        resCategories.append({
-            "Id": res["id"],
-            "Name": res["attributes"]["name"],
-            "SeoName": res["attributes"]["uname"],
-        })
+        if (int(res["id"])<200 and len(resCategories)<4):
+            resCategories.append({
+                "Id": res["id"],
+                "Name": res["attributes"]["name"],
+                "SeoName": res["attributes"]["uname"],
+            })
     return(resCategories)
 
 
