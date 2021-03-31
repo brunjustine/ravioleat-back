@@ -1,4 +1,4 @@
-from flask_restful import Resource, reqparse, abort
+from flask_restful import abort
 import requests
 import re
 from app.resources.just_eat.utils import *
@@ -20,7 +20,6 @@ def get_just_eat_restaurant_by_id(lat, lon, restaurant_id):
         restaurant_items = add_items_prices(country_code, tenant, restaurant_id, restaurant_items)
 
         restaurant = get_restaurant_by_id(get_just_eat_restaurants(lat, lon), restaurant_id)
-        print(restaurant)
         restaurant = format_json(restaurant, restaurant_items)
         return restaurant
 
@@ -76,22 +75,3 @@ def format_json(restaurant, restaurant_items):
                                                } for restaurant_item in restaurant_items
                                            ])
     return restaurant_with_menu_model
-
-
-class RestaurantByID(Resource):
-    def post(self, restaurant_id):
-        body_parser = reqparse.RequestParser()
-        body_parser.add_argument('lat', type=str, required=True, help="Missing the lat of the user")
-        body_parser.add_argument('lon', type=str, required=True, help="Missing the lon of the user")
-        # Accepted only if these two parameters are strictly declared in body else raise exception
-        args = body_parser.parse_args(strict=True)
-
-        try:
-            lat = args['lat']
-            lon = args['lon']
-
-            restaurant = get_just_eat_restaurant_by_id(lat, lon, restaurant_id)
-
-            return {"status": 200, "message": "OK", "data": restaurant}
-        except Exception as e:
-            abort(400, status=400, message="Bad Request", data=e.__str__())
