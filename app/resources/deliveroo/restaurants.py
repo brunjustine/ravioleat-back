@@ -12,12 +12,15 @@ from app.services.restaurantService import RESTAURANT
 def get_deliveroo_restaurants(lat, lng):
     headers = {"X-Roo-Country": "uk", "Accept-Language": "en-en", "User": "Deliveroo-OrderApp/3.73.0",
                "Content-Type": "application/json"}
-
+    print("fenzoefn")
     try:
         params = {'lat': lat, 'lng': lng}
         url = "https://api.fr.deliveroo.com/orderapp/v2/restaurants"
-        response_dict = requests.get(url, params=params, headers=headers).json()
-        res = initResto(response_dict)
+        response_dict = requests.get(url, params=params, headers=headers)
+        if (response_dict.status_code == 404) :
+            res = []
+        else :
+            res = initResto(response_dict.json())
         return res
     except Exception as e:
         print(e)

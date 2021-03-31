@@ -14,9 +14,12 @@ def get_deliveroo_restaurant_by_id(lat, lng, id_restaurant):
     headers = {"X-Roo-Country":"fr", "Accept-Language":"fr-fr", "User":"Deliveroo-OrderApp/3.73.0","Content-Type":"application/json"}
     try :
         url = "https://api.fr.deliveroo.com/orderapp/v1/restaurants/"+str(id_restaurant)
-        response_dict = requests.get(url,headers=headers).json()
-        res = initRestoById(lat,lng,response_dict)
-        return({"status":200,"message":"OK","data":res})
+        response_dict = requests.get(url,headers=headers)
+        if (response_dict.status_code == 404) :
+            res = []
+        else :
+            res = initRestoById(lat,lng,response_dict.json())
+        return res
     except Exception as e:
                 print(e)
                 abort(400, status=400, message="Bad Request", data=e.__str__())
