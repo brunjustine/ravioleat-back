@@ -97,7 +97,7 @@ def init_resto():
             
                 restaurant_model.__setitem__("IsOpenNow",attributs.get("isOrderable",None))
                 restaurant_model.__setitem__("DeliveryCost", attributs.get("fareInfo", {}).get('serviceFee'))
-                restaurant_model.__setitem__("Offers",None)
+                restaurant_model.__setitem__("Offers",[])
                 
                 restaurant_model.__setitem__("CuisineTypes", [
                     {
