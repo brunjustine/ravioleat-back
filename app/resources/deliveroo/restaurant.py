@@ -38,8 +38,8 @@ def initRestoById(lat,lng,restaurant_by_id):
         "Longitude": restaurant_by_id["address"]["coordinates"][1]
     })
     restaurant_with_menu_model.__setitem__("Rating",{
-        "Count": restaurant_by_id["rating"]["value"],
-        "StarRating": restaurant_by_id["rating"]["formatted_count"]
+        "Count": restaurant_by_id["rating"]["formatted_count"],
+        "StarRating": restaurant_by_id["rating"]["value"]
     })
     restaurant_with_menu_model.__setitem__("Description", restaurant_by_id["description"])
     restaurant_with_menu_model.__setitem__("Url", restaurant_by_id["share_url"])

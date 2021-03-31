@@ -36,15 +36,15 @@ def initResto(restaurants):
             restaurant_model.__setitem__("Api", "deliveroo")
             restaurant_model.__setitem__("Id", resto["id"])
             restaurant_model.__setitem__("Name", attributs["name"])
-            restaurant_model.__setitem__("UniqueName", None)
+            restaurant_model.__setitem__("UniqueName", "")
             restaurant_model.__setitem__("Address", None)
             rating = attributs["rating_percentage"] if (attributs["rating_percentage"]==None) else (attributs["rating_percentage"])/20
             restaurant_model.__setitem__("Rating", {
                 "Count":attributs["rating_formatted_count"],
                 "StarRating":rating
             }) 
-            restaurant_model.__setitem__("Description", None)
-            restaurant_model.__setitem__("Url", None)
+            restaurant_model.__setitem__("Description", "")
+            restaurant_model.__setitem__("Url", "")
             restaurant_model.__setitem__("LogoUrl", attributs["image_url"])
             restaurant_model.__setitem__("DeliveryEtaMinutes", {
                 "RangeLower": attributs["delivery_time"].split(" – ")[0],
@@ -75,11 +75,12 @@ def listeCategories(resto, toutesLesCategories) :
     resCategories = []
     for categorieResto in resto["relationships"]["menu_tags"]["data"]: 
         res = next(categorie for categorie in toutesLesCategories if (categorie["id"]==categorieResto["id"] and categorie["type"]==categorieResto["type"]))
-        resCategories.append({
-            "Id": res["id"],
-            "Name": res["attributes"]["name"],
-            "SeoName": res["attributes"]["uname"],
-        })
+        if (int(res["id"])<200 and len(resCategories)<4):
+            resCategories.append({
+                "Id": res["id"],
+                "Name": res["attributes"]["name"],
+                "SeoName": res["attributes"]["uname"],
+            })
     return(resCategories)
 
 
