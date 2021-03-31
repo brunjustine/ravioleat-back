@@ -7,4 +7,4 @@ api = Api(app)
 
 from app import routes
 
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
