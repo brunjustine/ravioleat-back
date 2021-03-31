@@ -37,7 +37,7 @@ def remove_bad_items(restaurant_items):
     restaurant_items_tmp = []
     for restaurant_item in restaurant_items['items']:
         restaurant_item_id = restaurant_item['id']
-        if (re.match(r"[0-9]+$", restaurant_item_id)) is not None:
+        if (restaurant_item['name']) != "":
             restaurant_items_tmp.append(restaurant_item)
     return restaurant_items_tmp
 
