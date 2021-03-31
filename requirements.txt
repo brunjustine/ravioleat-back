@@ -9,3 +9,4 @@ jsonmerge
 pathlib
 fuzzywuzzy
 python-Levenshtein
+Flask-Cors
