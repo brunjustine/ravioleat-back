@@ -16,7 +16,7 @@ def get_just_eat_restaurants(lat, lon):
                                    params={'latitude': float(lat), 'longitude': float(lon)},
                                    headers={'Accept-Tenant': country_code})
 
-        restaurants = format_json(restaurants.json())
+        restaurants = format_json(restaurants.json(), country_code)
 
         return restaurants
     except Exception as e:
@@ -59,7 +59,7 @@ def get_restaurants_by_ids(ids, all_restaurants):
     return restaurants
 
 
-def format_json(restaurants):
+def format_json(restaurants, country_code):
     restaurant_list = []
 
     for restaurant in restaurants["Restaurants"]:
@@ -80,7 +80,9 @@ def format_json(restaurants):
         restaurant_model.__setitem__('Rating',
                                      {
                                          "Count": restaurant['Rating']['Count'],
-                                         "StarRating": restaurant['Rating']['StarRating']
+                                         "StarRating": resize_star_rating(
+                                             restaurant['Rating']['StarRating'], country_code
+                                         )
                                      })
         restaurant_model.__setitem__('Description', restaurant['Description'])
         restaurant_model.__setitem__('Url', restaurant['Url'])
@@ -115,4 +117,9 @@ def format_json(restaurants):
         restaurant_model.__setitem__('PriceCategory', None)
         restaurant_list.append(restaurant_model)
     return restaurant_list
+
+
+def resize_star_rating(star_rating, country_code):
+    return (5 * star_rating) / 6 if country_code == 'uk' else star_rating
+
 

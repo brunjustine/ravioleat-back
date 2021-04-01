@@ -1,4 +1,5 @@
 from geopy.geocoders import Nominatim
+from flask import abort
 
 
 def get_country_code_from_lat_lon(lat, lon):
@@ -13,6 +14,7 @@ def get_country_code_from_lat_lon(lat, lon):
         return country_code
     except Exception:
         print("geopy is down..")
+
 
 def get_tenant_from_country_code(country_code):
     if country_code == 'uk':
