@@ -23,9 +23,12 @@ def get_uber_eat_restaurants(latitude, longitude, formatted_address, user_query)
         params['user_query'] = user_query if user_query != "" else get_formatted_categories(params)
     except:
         abort(400)
-    del UBER_RESTAURANTS[:]
-    UBER_RESTAURANTS.append(call_search(params))
-    liste_restaurants = init_resto()
+
+    liste_restaurants = []
+    if params['user_query'] is not None :
+        del UBER_RESTAURANTS[:]
+        UBER_RESTAURANTS.append(call_search(params))
+        liste_restaurants = init_resto() 
     return liste_restaurants
 
 def call_search(params : Dict[str, Any])-> Dict[str, Any]:

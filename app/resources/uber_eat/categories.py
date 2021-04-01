@@ -35,12 +35,18 @@ def call_category(params: Dict[str, Any]) -> Dict[str, Any]:
 
 #get top categories
 def get_categories(categories: Dict[str, Any]):
-    top_categories = next((x for x in categories['suggestedSections'] if x['title'] == "Top categories"), None)
-    return list(map(lambda category: category['title'] , top_categories['gridItems']))
+    if categories['suggestedSections'] is not None:
+        top_categories = next((x for x in categories['suggestedSections'] if x['title'] == "Top categories"), None)
+        return list(map(lambda category: category['title'] , top_categories['gridItems']))
+    else :
+        return []
 
 def get_formatted_categories(params: Dict[str, Any]):
     categories = call_category(params)
-    categories_regex = ""
-    for category in categories:
-        categories_regex += category+"|"
+    if len(categories) > 0 :
+        categories_regex = "" 
+        for category in categories:
+            categories_regex += category+"|"
+    else :
+        categories_regex = None 
     return categories_regex
