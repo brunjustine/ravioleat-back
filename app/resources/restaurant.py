@@ -2,6 +2,7 @@ from flask_restful import Resource, reqparse, abort
 from app.resources.just_eat.restaurant import get_just_eat_restaurant_by_id
 from app.resources.deliveroo.restaurant import get_deliveroo_restaurant_by_id
 from app.resources.uber_eat.restaurant import get_uber_eat_restaurant_by_id
+import asyncio
 
 
 class RestaurantById(Resource):
