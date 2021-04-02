@@ -10,7 +10,7 @@ from app.services.restaurantWithMenuService import RESTAURANT_WITH_MENU
 def get_just_eat_restaurant_by_id(lat, lon, restaurant_id):
     try:
 
-        pool = mp.Pool(mp.cpu_count())
+        pool = mp.Pool(mp.cpu_count()*5)
 
         country_code = get_country_code_from_lat_lon(lat, lon)
         tenant = get_tenant_from_country_code(country_code)
