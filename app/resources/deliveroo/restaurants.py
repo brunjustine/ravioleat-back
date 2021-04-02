@@ -1,11 +1,9 @@
 from flask import request
 from flask_restful import Resource, reqparse, abort
-
 from typing import Dict, List, Any
-
 import requests
 from fuzzywuzzy import fuzz
-
+import multiprocessing as mp
 from app.services.restaurantService import RESTAURANT
 
 
@@ -19,15 +17,49 @@ def get_deliveroo_restaurants(lat, lng):
         if (response_dict.status_code == 404) :
             res = []
         else :
-            res = initResto(response_dict.json())
+            # pool = mp.Pool(mp.cpu_count()*10)
+            restaurants = response_dict.json()
+            # restaurants_filtres = list(filter(lambda x: x["type"]=='restaurant' , restaurants["data"]))
+            # restaurants_address = [pool.apply_async(get_address,
+                                        # args=("coco",restaurant)) for restaurant in restaurants_filtres]
+            # restaurants_address = [res.get(timeout=4) for res in restaurants_address]
+            # pool.close()
+            # res = initResto(restaurants,restaurants_address)
+            res = initResto(restaurants)
         return res
     except Exception as e:
         print(e)
         abort(400, status=400, message="Bad Request", data=e.__str__())
 
 
+def get_address(coco,restaurant):
+    id_restaurant = restaurant["id"]
+    headers = {"X-Roo-Country":"fr", "Accept-Language":"fr-fr", "User":"Deliveroo-OrderApp/3.73.0","Content-Type":"application/json"}
+    try :
+        url = "https://api.fr.deliveroo.com/orderapp/v1/restaurants/"+str(id_restaurant)
+        response_dict = requests.get(url,headers=headers)
+        if (response_dict.status_code == 404) :
+            res = {}
+        else :
+            restaurant_by_id = response_dict.json()
+            res = {
+                "City": restaurant_by_id["address"]["city"],
+                "Firstline": restaurant_by_id["address"]["address1"],
+                "Postcode": restaurant_by_id["address"]["post_code"],
+                "Latitude": restaurant_by_id["address"]["coordinates"][0],
+                "Longitude": restaurant_by_id["address"]["coordinates"][1]
+            }
+        return res
+    except Exception as e:
+                print(e)
+                abort(400, status=400, message="Bad Request", data=e.__str__())
+ 
+
+
+# def initResto(restaurants, restaurants_address):
 def initResto(restaurants):
     listeRestos = []
+    i=0
     for resto in restaurants["data"] :
         if resto['type'] == 'restaurant' :
             restaurant_model = RESTAURANT.copy()
@@ -36,6 +68,7 @@ def initResto(restaurants):
             restaurant_model.__setitem__("Id", resto["id"])
             restaurant_model.__setitem__("Name", attributs["name"])
             restaurant_model.__setitem__("UniqueName", "")
+            # restaurant_model.__setitem__("Address", restaurants_address[i])
             restaurant_model.__setitem__("Address", None)
             rating = attributs["rating_percentage"] if (attributs["rating_percentage"]==None) else (attributs["rating_percentage"])/20
             restaurant_model.__setitem__("Rating", {
@@ -57,6 +90,7 @@ def initResto(restaurants):
             restaurant_model.__setitem__("CuisineTypes", cuisineTypes)
             restaurant_model.__setitem__("PriceCategory", attributs["price_category"])
             listeRestos.append(restaurant_model)
+            i+=1
     return(listeRestos)
 
 

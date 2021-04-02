@@ -2,6 +2,7 @@ from flask_restful import Resource, reqparse, abort
 from app.resources.just_eat.restaurants import get_just_eat_restaurants, get_just_eat_restaurant_search
 from app.resources.deliveroo.restaurants import get_deliveroo_restaurants, search
 from app.resources.uber_eat.restaurants import get_uber_eat_restaurants
+from multiprocessing import Process, Queue
 
 
 class RestaurantsByLatLong(Resource):
@@ -23,15 +24,30 @@ class RestaurantsByLatLong(Resource):
 
             restaurants = []
 
-            restaurants.extend(get_just_eat_restaurants(lat, lon))
-            restaurants.extend(get_deliveroo_restaurants(lat, lon))
-            restaurants.extend(get_uber_eat_restaurants(lat, lon, formatted_address, user_query))
+            q = Queue()
 
+            p1 = Process(target=get_just_eat,args=(lat,lon,q))
+            p2 = Process(target=get_deliveroo,args=(lat,lon,q))
+            p3 = Process(target=get_uber_eat,args=(lat,lon,formatted_address, user_query,q))
+            p1.start()
+            p2.start()
+            p3.start()
+            for i in range(3):
+                restaurants.extend(q.get()) 
             return {"status": 200, "message": "OK", "data": restaurants}
 
         except Exception as e:
             print(e)
             abort(400, status=400, message="Bad Request", data=e.__str__())
+        
+def get_just_eat(lat, lon,q):
+    q.put(get_just_eat_restaurants(lat, lon))
+
+def get_deliveroo(lat, lon,q):
+    q.put(get_deliveroo_restaurants(lat, lon))
+
+def get_uber_eat(lat, lon, formatted_address, user_query,q):
+    q.put(get_uber_eat_restaurants(lat, lon, formatted_address, user_query))
 
 
 class RestaurantsByLatLongBySearch(Resource):
@@ -51,13 +67,27 @@ class RestaurantsByLatLongBySearch(Resource):
             formatted_address = args['formattedAddress']
 
             restaurants = []
-
-            restaurants.extend(get_just_eat_restaurant_search(lat, lon, search_term))
-            restaurants.extend(search(lat, lon, search_term))
-            restaurants.extend(get_uber_eat_restaurants(lat, lon, formatted_address, search_term))
-
+            q = Queue()
+            
+            p1 = Process(target=get_just_eat_search,args=(lat,lon,search_term,q))
+            p2 = Process(target=get_deliveroo_search,args=(lat,lon,search_term,q))
+            p3 = Process(target=get_uber_eat_search,args=(lat,lon,formatted_address, search_term,q))
+            p1.start()
+            p2.start()
+            p3.start()
+            for i in range(3):
+                restaurants.extend(q.get()) 
             return {"status": 200, "message": "OK", "data": restaurants}
 
         except Exception as e:
             print(e)
             abort(400, status=400, message="Bad Request", data=e.__str__())
+
+def get_just_eat_search(lat, lon,search_term,q):
+    q.put(get_just_eat_restaurant_search(lat, lon, search_term))
+
+def get_deliveroo_search(lat, lon,search_term,q):
+    q.put(search(lat, lon, search_term))
+
+def get_uber_eat_search(lat, lon, formatted_address, search_term,q):
+    q.put(get_uber_eat_restaurants(lat, lon, formatted_address, search_term))

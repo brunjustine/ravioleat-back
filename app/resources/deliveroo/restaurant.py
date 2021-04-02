@@ -16,7 +16,7 @@ def get_deliveroo_restaurant_by_id(lat, lng, id_restaurant):
         url = "https://api.fr.deliveroo.com/orderapp/v1/restaurants/"+str(id_restaurant)
         response_dict = requests.get(url,headers=headers)
         if (response_dict.status_code == 404) :
-            res = []
+            res = {}
         else :
             res = initRestoById(lat,lng,response_dict.json())
         return res
