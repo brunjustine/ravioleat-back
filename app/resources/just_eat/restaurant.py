@@ -1,7 +1,6 @@
 from flask_restful import abort
 import requests
 import multiprocessing as mp
-from os import getpid
 from app.resources.just_eat.utils import *
 from app.resources.restaurants import get_just_eat_restaurants
 from app.services.restaurantWithMenuService import RESTAURANT_WITH_MENU
@@ -18,13 +17,13 @@ def get_just_eat_restaurant_by_id(lat, lon, restaurant_id):
         url = "https://{0}.api.just-eat.io/restaurants/{1}/{2}/catalogue/items".format(tenant,
                                                                                        country_code,
                                                                                        restaurant_id)
-        print(url)
+
         restaurant_items = requests.get(url, params={'limit': 1000}).json()
         restaurant_items = remove_bad_items(restaurant_items)
         restaurant_items = [pool.apply_async(add_item_price,
                                         args=(country_code, tenant, restaurant_id, restaurant_item)) for restaurant_item in restaurant_items]
         restaurant_items = [res.get(timeout=1) for res in restaurant_items]
-        # restaurant_items = add_items_prices(country_code, tenant, restaurant_id, restaurant_items)
+
         pool.close()
 
         restaurant = get_restaurant_by_id(get_just_eat_restaurants(lat, lon), restaurant_id)
@@ -50,20 +49,6 @@ def remove_bad_items(restaurant_items):
     return restaurant_items_tmp
 
 
-def add_items_prices(country_code, tenant, restaurant_id, restaurant_items):
-    for restaurant_item in restaurant_items:
-        restaurant_item_id = restaurant_item['id']
-
-        url = "https://{0}.api.just-eat.io/restaurants/{1}/{2}/catalogue/items/{3}/variations" \
-            .format(country_code, tenant, restaurant_id, restaurant_item_id)
-
-        item = requests.get(url, params={'limit': 100}).json()
-        item_price = get_item_price(item, restaurant_item_id)
-        restaurant_item['price'] = item_price
-
-    return restaurant_items
-
-
 def add_item_price(country_code, tenant, restaurant_id, restaurant_item):
     restaurant_item_id = restaurant_item['id']
 
@@ -71,7 +56,6 @@ def add_item_price(country_code, tenant, restaurant_id, restaurant_item):
         .format(country_code, tenant, restaurant_id, restaurant_item_id)
 
     item = requests.get(url, params={'limit': 1000}).json()
-    print('I\' process', getpid())
     item_price = get_item_price(item, restaurant_item_id)
     restaurant_item['price'] = item_price
 
