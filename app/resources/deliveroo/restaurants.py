@@ -12,7 +12,6 @@ from app.services.restaurantService import RESTAURANT
 def get_deliveroo_restaurants(lat, lng):
     headers = {"X-Roo-Country": "uk", "Accept-Language": "en-en", "User": "Deliveroo-OrderApp/3.73.0",
                "Content-Type": "application/json"}
-    print("fenzoefn")
     try:
         params = {'lat': lat, 'lng': lng}
         url = "https://api.fr.deliveroo.com/orderapp/v2/restaurants"
