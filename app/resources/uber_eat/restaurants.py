@@ -20,7 +20,7 @@ def get_uber_eat_restaurants(latitude, longitude, formatted_address, user_query)
     """
     try:  
         params = {"latitude":float(latitude), "longitude" :float(longitude) , "formatted_address": formatted_address}  
-        params['user_query'] = user_query if user_query != "" else get_formatted_categories(params)
+        params['user_query'] = user_query if user_query != "" else get_formatted_categories(params)[0:100]
     except:
         abort(400)
 
