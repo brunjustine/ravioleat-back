@@ -23,6 +23,7 @@ def get_just_eat_restaurant_by_id(lat, lon, restaurant_id):
         restaurant_items = [pool.apply_async(add_item_price,
                                         args=(country_code, tenant, restaurant_id, restaurant_item)) for restaurant_item in restaurant_items]
         restaurant_items = [res.get(timeout=1) for res in restaurant_items]
+        print(restaurant_items)
 
         pool.close()
 
@@ -31,7 +32,8 @@ def get_just_eat_restaurant_by_id(lat, lon, restaurant_id):
         return restaurant
 
     except Exception as e:
-        abort(404, status=404, message="Bad Request", data=e.__str__())
+        print(e)
+        abort(404)
 
 
 def get_restaurant_by_id(restaurants, restaurant_id):
@@ -44,7 +46,7 @@ def remove_bad_items(restaurant_items):
     restaurant_items_tmp = []
     for restaurant_item in restaurant_items['items']:
         restaurant_item_id = restaurant_item['id']
-        if (restaurant_item['name']) != "":
+        if 'description' in restaurant_item.keys():
             restaurant_items_tmp.append(restaurant_item)
     return restaurant_items_tmp
 
@@ -58,6 +60,7 @@ def add_item_price(country_code, tenant, restaurant_id, restaurant_item):
     item = requests.get(url, params={'limit': 1000}).json()
     item_price = get_item_price(item, restaurant_item_id)
     restaurant_item['price'] = item_price
+    print(restaurant_item)
 
     return restaurant_item
 
