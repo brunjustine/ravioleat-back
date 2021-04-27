@@ -32,10 +32,10 @@ def initRestoById(lat,lng,restaurant_by_id):
     restaurant_with_menu_model.__setitem__("UniqueName",restaurant_by_id['uname'])
     restaurant_with_menu_model.__setitem__("Address",{
         "City": restaurant_by_id["address"]["city"],
-        "Firstline": restaurant_by_id["address"]["address1"],
+        "FirstLine": restaurant_by_id["address"]["address1"],
         "Postcode": restaurant_by_id["address"]["post_code"],
-        "Latitude": restaurant_by_id["address"]["coordinates"][0],
-        "Longitude": restaurant_by_id["address"]["coordinates"][1]
+        "Latitude": restaurant_by_id["address"]["coordinates"][1],
+        "Longitude": restaurant_by_id["address"]["coordinates"][0]
     })
     restaurant_with_menu_model.__setitem__("Rating",{
         "Count": restaurant_by_id["rating"]["formatted_count"],

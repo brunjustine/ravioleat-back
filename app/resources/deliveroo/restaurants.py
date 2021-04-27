@@ -19,18 +19,12 @@ def get_deliveroo_restaurants(lat, lng):
         if (response_dict.status_code == 404) :
             res = []
         else : 
-            # pool = mp.Pool(mp.cpu_count()*5)
             restaurants = response_dict.json()
             restaurants_filtres = list(filter(lambda x: x["type"]=='restaurant' , restaurants["data"]))
-            # restaurants_address = [pool.apply_async(get_address,
-            #                             args=("coco",restaurant)) for restaurant in restaurants_filtres]
-            # restaurants_address = [res.get(timeout=4) for res in restaurants_address]
-            # pool.close()
             loop = get_or_create_eventloop()
             future = asyncio.ensure_future(run(restaurants,restaurants_filtres))
             restaurants_address = loop.run_until_complete(future)
             res = initResto(restaurants,restaurants_address)
-            # res = initResto(restaurants)
         return res
     except Exception as e:
         print(e)
@@ -67,42 +61,18 @@ async def get_address(restaurant, session):
                 restaurant_by_id = await response_dict.json()
                 res = {
                     "City": restaurant_by_id["address"]["city"],
-                    "Firstline": restaurant_by_id["address"]["address1"],
+                    "FirstLine": restaurant_by_id["address"]["address1"],
                     "Postcode": restaurant_by_id["address"]["post_code"],
-                    "Latitude": restaurant_by_id["address"]["coordinates"][0],
-                    "Longitude": restaurant_by_id["address"]["coordinates"][1]
+                    "Latitude": restaurant_by_id["address"]["coordinates"][1],
+                    "Longitude": restaurant_by_id["address"]["coordinates"][0]
                 }
             return res
     except Exception as e:
                 print(e)
                 abort(400, status=400, message="Bad Request", data=e.__str__())
 
-def get_addresss(coco,restaurant):
-    id_restaurant = restaurant["id"]
-    headers = {"X-Roo-Country":"fr", "Accept-Language":"fr-fr", "User":"Deliveroo-OrderApp/3.73.0","Content-Type":"application/json"}
-    try :
-        url = "https://api.fr.deliveroo.com/orderapp/v1/restaurants/"+str(id_restaurant)
-        response_dict = requests.get(url,headers=headers)
-        if (response_dict.status_code == 404) :
-            res = {}
-        else :
-            restaurant_by_id = response_dict.json()
-            res = {
-                "City": restaurant_by_id["address"]["city"],
-                "Firstline": restaurant_by_id["address"]["address1"],
-                "Postcode": restaurant_by_id["address"]["post_code"],
-                "Latitude": restaurant_by_id["address"]["coordinates"][0],
-                "Longitude": restaurant_by_id["address"]["coordinates"][1]
-            }
-        return res
-    except Exception as e:
-                print(e)
-                abort(400, status=400, message="Bad Request", data=e.__str__())
- 
-
 
 def initResto(restaurants, restaurants_address):
-# def initResto(restaurants):
     listeRestos = []
     i=0
     for resto in restaurants["data"] :
@@ -114,7 +84,6 @@ def initResto(restaurants, restaurants_address):
             restaurant_model.__setitem__("Name", attributs["name"])
             restaurant_model.__setitem__("UniqueName", "")
             restaurant_model.__setitem__("Address", restaurants_address[i])
-            # restaurant_model.__setitem__("Address", None)
             rating = attributs["rating_percentage"] if (attributs["rating_percentage"]==None) else (attributs["rating_percentage"])/20
             restaurant_model.__setitem__("Rating", {
                 "Count":attributs["rating_formatted_count"],
