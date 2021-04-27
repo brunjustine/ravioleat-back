@@ -59,7 +59,7 @@ def call_search(params : Dict[str, Any])-> Dict[str, Any]:
 
 def init_resto():
     liste_restaurants = []
-    if (UBER_RESTAURANTS[0]['feed']['feedItems'] is not None):
+    if ('feed' in UBER_RESTAURANTS[0] and UBER_RESTAURANTS[0]['feed']['feedItems'] is not None):
         for resto in UBER_RESTAURANTS[0]['feed']['feedItems']:
             if resto['type'] == 'STORE':
                 restaurant_model = RESTAURANT.copy()

@@ -10,3 +10,4 @@ pathlib
 fuzzywuzzy
 python-Levenshtein
 flask-cors
+aiohttp[speedups]
