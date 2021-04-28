@@ -48,5 +48,5 @@ def get_formatted_categories(params: Dict[str, Any]):
         for category in categories:
             categories_regex += category+"|"
     else :
-        categories_regex = None 
+        categories_regex = "" 
     return categories_regex
