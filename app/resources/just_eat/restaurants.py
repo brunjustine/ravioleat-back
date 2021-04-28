@@ -68,7 +68,7 @@ def format_json(restaurants, country_code):
         restaurant_model.__setitem__('Api', 'just_eat')
         restaurant_model.__setitem__('Id', restaurant['Id'])
         restaurant_model.__setitem__('Name', restaurant['Name'])
-        restaurant_model.__setitem__('UniqueName', restaurant['UniqueName'])
+        restaurant_model.__setitem__('UniqueName', restaurant['UniqueName'].replace("-"," "))
         restaurant_model.__setitem__('Address',
                                      {
                                          "City": restaurant['Address']['City'],
