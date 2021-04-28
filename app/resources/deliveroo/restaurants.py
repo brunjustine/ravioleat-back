@@ -60,11 +60,15 @@ async def get_address(restaurant, session):
             else :
                 restaurant_by_id = await response_dict.json()
                 res = {
-                    "City": restaurant_by_id["address"]["city"],
-                    "FirstLine": restaurant_by_id["address"]["address1"],
-                    "Postcode": restaurant_by_id["address"]["post_code"],
-                    "Latitude": restaurant_by_id["address"]["coordinates"][1],
-                    "Longitude": restaurant_by_id["address"]["coordinates"][0]
+                    "address": {
+                        "City": restaurant_by_id["address"]["city"],
+                        "FirstLine": restaurant_by_id["address"]["address1"],
+                        "Postcode": restaurant_by_id["address"]["post_code"],
+                        "Latitude": restaurant_by_id["address"]["coordinates"][1],
+                        "Longitude": restaurant_by_id["address"]["coordinates"][0]
+
+                    },
+                    "UniqueName":restaurant_by_id["uname"].replace("-"," ")
                 }
             return res
     except Exception as e:
@@ -82,8 +86,8 @@ def initResto(restaurants, restaurants_address):
             restaurant_model.__setitem__("Api", "deliveroo")
             restaurant_model.__setitem__("Id", resto["id"])
             restaurant_model.__setitem__("Name", attributs["name"])
-            restaurant_model.__setitem__("UniqueName", "")
-            restaurant_model.__setitem__("Address", restaurants_address[i])
+            restaurant_model.__setitem__("UniqueName", restaurants_address[i]["UniqueName"])
+            restaurant_model.__setitem__("Address", restaurants_address[i]["address"])
             rating = attributs["rating_percentage"] if (attributs["rating_percentage"]==None) else (attributs["rating_percentage"])/20
             restaurant_model.__setitem__("Rating", {
                 "Count":attributs["rating_formatted_count"],

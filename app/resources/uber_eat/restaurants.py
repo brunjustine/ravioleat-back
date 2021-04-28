@@ -69,7 +69,7 @@ def init_resto():
                 restaurant_model.__setitem__("Api","uber_eat")
                 restaurant_model.__setitem__("Id",uuid)
                 restaurant_model.__setitem__("Name",attributs.get("title",None))
-                restaurant_model.__setitem__("UniqueName",None)
+                restaurant_model.__setitem__("UniqueName",attributs.get("title",None).strip().lower())
                 restaurant_model.__setitem__("Address",{
                     "City": attributs["location"]["address"]["city"],
                     "FirstLine": attributs["location"]["address"]["address1"],
