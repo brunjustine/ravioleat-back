@@ -27,7 +27,6 @@ def get_deliveroo_restaurants(lat, lng):
             res = initResto(restaurants,restaurants_address)
         return res
     except Exception as e:
-        print(e)
         abort(400, status=400, message="Bad Request", data=e.__str__())
 
 def get_or_create_eventloop():
@@ -126,7 +125,7 @@ def listeCategories(resto, toutesLesCategories) :
     resCategories = []
     for categorieResto in resto["relationships"]["menu_tags"]["data"]: 
         res = next(categorie for categorie in toutesLesCategories if (categorie["id"]==categorieResto["id"] and categorie["type"]==categorieResto["type"]))
-        if (int(res["id"])<200 and len(resCategories)<4):
+        if ((int(res["id"])<200 and len(resCategories)<4) or (res["id"]=="692") or (res["id"]=="796")):
             resCategories.append({
                 "Id": res["id"],
                 "Name": res["attributes"]["name"],

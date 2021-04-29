@@ -105,15 +105,8 @@ def format_json(restaurants, country_code):
                                          }
                                          for offer in restaurant['Offers']
                                      ])
-        restaurant_model.__setitem__('CuisineTypes',
-                                     [
-                                         {
-                                             'Id': cuisine_type['Id'],
-                                             'Name': cuisine_type['Name'],
-                                             'SeoName': cuisine_type['SeoName']
-                                         }
-                                         for cuisine_type in restaurant['CuisineTypes']
-                                     ])
+        cuisine_types = cuisineTypes(restaurant)
+        restaurant_model.__setitem__('CuisineTypes',cuisine_types)
         restaurant_model.__setitem__('PriceCategory', None)
         restaurant_list.append(restaurant_model)
     return restaurant_list
@@ -122,4 +115,18 @@ def format_json(restaurants, country_code):
 def resize_star_rating(star_rating, country_code):
     return (5 * star_rating) / 6 if country_code == 'uk' else star_rating
 
-
+def cuisineTypes(restaurant):
+    resCategories = []
+    if (restaurant["IsHalal"]):
+        resCategories.append({
+            "Id": 0,
+            "Name": "Halal",
+            "SeoName": "Halal",
+        })
+    for cuisine_type in restaurant['CuisineTypes']: 
+        resCategories.append({
+            'Id': cuisine_type['Id'],
+            'Name': cuisine_type['Name'],
+            'SeoName': cuisine_type['SeoName']
+        })
+    return(resCategories)
