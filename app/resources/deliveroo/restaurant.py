@@ -1,13 +1,8 @@
-from flask import request
-from flask_restful import Resource, reqparse, abort
-
-from typing import Dict, List, Any
-
+from flask_restful import abort
 import requests
 
 from app.services.restaurantWithMenuService import RESTAURANT_WITH_MENU
-from app.resources.deliveroo.restaurants import get_deliveroo_restaurants, search
-
+from app.resources.deliveroo.restaurants import get_deliveroo_restaurants
 
 
 def get_deliveroo_restaurant_by_id(lat, lng, id_restaurant):
@@ -23,7 +18,8 @@ def get_deliveroo_restaurant_by_id(lat, lng, id_restaurant):
     except Exception as e:
                 print(e)
                 abort(400, status=400, message="Bad Request", data=e.__str__())
-        
+
+
 def initRestoById(lat,lng,restaurant_by_id):
     liste_restaurants = get_deliveroo_restaurants(lat,lng)
     restaurant = get_resto_by_id(liste_restaurants,restaurant_by_id['id'])
@@ -39,7 +35,11 @@ def initRestoById(lat,lng,restaurant_by_id):
     })
     restaurant_with_menu_model.__setitem__("Rating",{
         "Count": restaurant_by_id["rating"]["formatted_count"],
-        "StarRating": restaurant_by_id["rating"]["value"]
+        "StarRating": restaurant_by_id["rating"]["value"],
+    }) if restaurant_by_id["rating"] is not None else \
+        restaurant_with_menu_model.__setitem__("Rating", {
+        "Count": "0",
+        "StarRating": 0,
     })
     restaurant_with_menu_model.__setitem__("Description", restaurant_by_id["description"])
     restaurant_with_menu_model.__setitem__("Url", restaurant_by_id["share_url"])
