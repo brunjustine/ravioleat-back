@@ -1,6 +1,6 @@
-from flask_restful import abort
 import requests
 from app.resources.just_eat.utils import *
+
 from app.services.restaurantService import RESTAURANT
 
 
@@ -68,7 +68,7 @@ def format_json(restaurants, country_code):
         restaurant_model.__setitem__('Api', 'just_eat')
         restaurant_model.__setitem__('Id', restaurant['Id'])
         restaurant_model.__setitem__('Name', restaurant['Name'])
-        restaurant_model.__setitem__('UniqueName', restaurant['UniqueName'].replace("-"," "))
+        restaurant_model.__setitem__('UniqueName', restaurant['UniqueName'].replace("-", " "))
         restaurant_model.__setitem__('Address',
                                      {
                                          "City": restaurant['Address']['City'],
@@ -106,7 +106,7 @@ def format_json(restaurants, country_code):
                                          for offer in restaurant['Offers']
                                      ])
         cuisine_types = cuisineTypes(restaurant)
-        restaurant_model.__setitem__('CuisineTypes',cuisine_types)
+        restaurant_model.__setitem__('CuisineTypes', cuisine_types)
         restaurant_model.__setitem__('PriceCategory', None)
         restaurant_list.append(restaurant_model)
     return restaurant_list
@@ -115,9 +115,10 @@ def format_json(restaurants, country_code):
 def resize_star_rating(star_rating, country_code):
     return (5 * star_rating) / 6 if country_code == 'uk' else star_rating
 
+
 def cuisineTypes(restaurant):
     resCategories = []
-    if (restaurant["IsHalal"]):
+    if restaurant["IsHalal"]:
         resCategories.append({
             "Id": 0,
             "Name": "Halal",
@@ -129,4 +130,4 @@ def cuisineTypes(restaurant):
             'Name': cuisine_type['Name'],
             'SeoName': cuisine_type['SeoName']
         })
-    return(resCategories)
+    return resCategories
