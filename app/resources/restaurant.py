@@ -1,8 +1,8 @@
 from flask_restful import Resource, reqparse, abort
+
 from app.resources.just_eat.restaurant import get_just_eat_restaurant_by_id
 from app.resources.deliveroo.restaurant import get_deliveroo_restaurant_by_id
 from app.resources.uber_eat.restaurant import get_uber_eat_restaurant_by_id
-import asyncio
 
 
 class RestaurantById(Resource):
@@ -13,7 +13,6 @@ class RestaurantById(Resource):
         body_parser.add_argument('api', type=str, required=True, help="Missing the API")
         body_parser.add_argument('userQuery', type=str, required=True, help="Missing the user query ")
         body_parser.add_argument('formattedAddress', type=str, required=True, help="Missing the address ")
-        args = body_parser.parse_args(strict=True)
 
         # Accepted only if these two parameters are strictly declared in body else raise exception
         args = body_parser.parse_args(strict=True)
@@ -25,7 +24,7 @@ class RestaurantById(Resource):
             user_query = args['userQuery']
             formatted_address = args['formattedAddress']
 
-            #restaurant = []
+            restaurant = []
             if api == "just_eat":
                 restaurant = get_just_eat_restaurant_by_id(lat, lon, restaurant_id)
             elif api == "deliveroo":
