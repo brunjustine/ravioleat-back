@@ -1,5 +1,4 @@
 from geopy.geocoders import Nominatim
-from flask import abort
 
 
 def get_country_code_from_lat_lon(lat, lon):
